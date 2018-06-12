@@ -15,8 +15,12 @@ print(pre_templates[1])
 # kmers = [pre_templates[0][i:i + k] for i in range(0, len(pre_templates[0]) - k + 1)]
 
 # scores = []
+file = open("found_templates.fasta","w+")
 for index,t in enumerate(pre_templates):
-    print(template_id[index])
+    file.write(">" + (template_id[index])[:-6] + "\n")
+
+
+    # print((template_id[index])[:-6])
 
     candidates = {}
     for k in range(3, len(pre_templates[index])):
@@ -78,5 +82,8 @@ for index,t in enumerate(pre_templates):
         # print(kmers[idx_max_score])
 
 
-    print(candidates)
-    print(max(candidates, key=candidates.get))
+    # print(candidates)
+    file.write(max(candidates, key=candidates.get) + "\n")
+    # print(max(candidates, key=candidates.get))
+
+file.close()
