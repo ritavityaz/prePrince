@@ -1,10 +1,10 @@
 from Bio import SeqIO
 
 
-##amplicons = amplicons.fasta"
+# #amplicons = amplicons.fasta"
 def template_search(amplicons):
 
-    #Extract sequences and such
+    # Extract sequences and such
     templates = list(SeqIO.parse(amplicons, "fasta"))
     pre_templates = [str(t.seq) for t in templates]
     template_id = [str(t.id) for t in templates]
@@ -14,28 +14,38 @@ def template_search(amplicons):
     # kmers = [pre_templates[0][i:i + k] for i in range(0, len(pre_templates[0]) - k + 1)]
     # scores = []
 
-
     file = open("found_templates_" + str(amplicons),"w+")
+
+    # for every template amplicon
     for index, t in enumerate(pre_templates):
 
+        # initiate entry in output file
         file.write(">" + (template_id[index])[:-6] + "\n")
+        print(">" + (template_id[index])[:-6] + "\n")
 
         candidates = {}
 
+        # iterate through k-mers of size 3 to the size of whole template
         for k in range(3, len(pre_templates[index])):
+
             min_score = int(k * 0.75)
+
+            # generate k-mers
             kmers = [pre_templates[index][i:i + k] for i in range(0, len(pre_templates[index]) - k + 1)]
+            # print(kmers)
             scores = []
             repeats = []
 
+            # iterate through every k-mer
             for kmer_index in range(len(kmers) - k):
+
                 listOfSplits = [pre_templates[index][i:i + k] for i in range(kmer_index, len(pre_templates[index]), k)]
 
-                #Get rid on incomplete splits
+                # Get rid on incomplete splits (only the last one)
                 if len(listOfSplits[-1]) != len(listOfSplits[0]):
                     listOfSplits = listOfSplits[0:len(listOfSplits)-1]
 
-                #Get rid of first split(it's the same as the k-mer)
+                # Get rid of first split(it's the same as the k-mer)
                 listOfSplits = listOfSplits[1:]
 
 
@@ -69,8 +79,8 @@ def template_search(amplicons):
 
         # print(candidates)
         file.write(max(candidates, key=candidates.get) + "\n")
-        # print(max(candidates, key=candidates.get))
+        print(max(candidates, key=candidates.get))
     file.close()
 
 
-# template_search("kurono_amplicons.fasta")
+template_search("Beijing-391_amplicons.fasta")
